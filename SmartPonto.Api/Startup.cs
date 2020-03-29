@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SmartPonto.Api.Models;
+using SmartPonto.Api.Models.TokenAuth;
 
 namespace SmartPonto.Api
 {
@@ -28,10 +31,17 @@ namespace SmartPonto.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddControllers();
+
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            #region Swagger Doc Configuration
             services.AddSwaggerGen((obj) =>
             {
-                obj.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Smart Fipe Service API", Version = "2.1" });
+                obj.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Smart Ponto Service API", Version = "1.0" });
                 obj.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
@@ -61,37 +71,35 @@ namespace SmartPonto.Api
                       }
                     });
             });
+            #endregion
+            #region JWT Configuration
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(opt =>
-            //    {
-            //        opt.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            ValidateIssuer = true,
-            //            ValidateAudience = true,
-            //            ValidateLifetime = true,
-            //            ValidateIssuerSigningKey = true,
-            //            ValidIssuer = "Leandro Rauseo",
-            //            ValidAudience = "Leandro Rauseo",
-            //            IssuerSigningKey = new SymmetricSecurityKey(
-            //                Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))˚
-            //        };
-            //        opt.Events = new JwtBearerEvents
-            //        {
-            //            OnAuthenticationFailed = context =>
-            //            {
-            //                Console.Write("Token Invalido" + context.Exception.Message);
-            //                return Task.CompletedTask;
-            //            },
-            //            OnTokenValidated = context =>
-            //            {
-            //                Console.Write("Token Válido" + context.SecurityToken);
-            //                return Task.CompletedTask;
-            //            }
+            services.AddAuthentication(x =>
+               {
+                   x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                   x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+               }).AddJwtBearer(b =>
+               {
+                   b.RequireHttpsMetadata = false;
+                   b.SaveToken = true;
+                   b.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       IssuerSigningKey = new SymmetricSecurityKey(key),
+                       ValidateIssuerSigningKey = true,
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               });
+            #endregion
 
-            //        };
-            //    });
-            
+            #region Injecao de depenedencia
+            services.AddSingleton<TokenAuthentication, TokenAuthentication>();
+
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,13 +113,19 @@ namespace SmartPonto.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Smart Fipe API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Smart Ponto API");
             });
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseAuthorization();
 

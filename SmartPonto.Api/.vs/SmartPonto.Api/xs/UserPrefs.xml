@@ -1,17 +1,22 @@
 ﻿<Properties StartupConfiguration="{CBE871A0-AA10-4A69-AEBA-8DBCE89E5DA5}|Default">
-  <MonoDevelop.Ide.ItemProperties.SmartPonto.Api FirstBuild="True" PreferredExecutionTarget="/Applications/Safari.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Startup.cs">
+  <MonoDevelop.Ide.ItemProperties.SmartPonto.Api PreferredExecutionTarget="/Applications/Safari.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/UsuarioController.cs">
     <Files>
       <File FileName="Controllers/WeatherForecastController.cs" Line="1" Column="1" />
-      <File FileName="Startup.cs" Line="1" Column="1" />
+      <File FileName="appsettings.json" Line="10" Column="19" />
+      <File FileName="Controllers/UsuarioController.cs" Line="39" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="SmartPonto.Api" expanded="True">
             <Node name="SmartPonto.Api" expanded="True">
-              <Node name="Controllers" expanded="True" />
-              <Node name="Startup.cs" selected="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="UsuarioController.cs" selected="True" />
+              </Node>
+              <Node name="Models" expanded="True">
+                <Node name="TokenAuth" expanded="True" />
+              </Node>
             </Node>
           </Node>
         </State>
