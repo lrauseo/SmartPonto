@@ -13,9 +13,9 @@ namespace SmartPonto.Api.Controllers
     [Route("api/[controller]")]
     public class UsuarioController : Controller
     {
-        private readonly ITokenAutenthication authentication;
+        private readonly ITokenAuthentication authentication;
 
-        public UsuarioController(ITokenAutenthication authentication)
+        public UsuarioController(ITokenAuthentication authentication)
         {
             this.authentication = authentication;
         }
@@ -36,12 +36,12 @@ namespace SmartPonto.Api.Controllers
         // POST api/values
         [HttpPost("Autenticacao")]
         [AllowAnonymous]
-        public IActionResult Post([FromBody]IDictionary<string,string> value)
+        public IActionResult Post([FromQuery] string user, string pwd)
         {
             try
             {
-                var usuario = value["user"];
-                var senha = value["pwd"];
+                var usuario = user;
+                var senha = pwd;
                 if (usuario == "ponto" && senha == "ponto123")
                 {
                     return Ok(authentication.GenerateToken(usuario));

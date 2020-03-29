@@ -11,7 +11,7 @@ namespace SmartPonto.Api.Models.TokenAuth
     /// <summary>
     /// classe para manipulação e validação do token
     /// </summary>
-    public class TokenAuthentication : ITokenAutenthication
+    public class TokenAuthentication : ITokenAuthentication
     {
         private readonly AppSettings _AppSettings;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 namespace SmartPonto.Api.Models.TokenAuth
 {
-    public interface ITokenAutenthication
+    public interface ITokenAuthentication
     {
         string GenerateToken(string userName);
     }

@@ -96,7 +96,7 @@ namespace SmartPonto.Api
             #endregion
 
             #region Injecao de depenedencia
-            services.AddSingleton<TokenAuthentication, TokenAuthentication>();
+            services.AddScoped<ITokenAuthentication, TokenAuthentication>();
 
             #endregion
 
