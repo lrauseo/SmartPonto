@@ -348,3 +348,10 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+SmartPonto.Api/bin
+SmartPonto.Api/obj
+SmartPonto.Api/bin
+
+SmartPonto.Api/.vs
+SmartPonto.Api/obj
+SmartPonto.Api/.vs
