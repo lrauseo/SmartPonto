@@ -16,6 +16,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SmartPonto.Api.Models;
 using SmartPonto.Api.Models.TokenAuth;
+using SmartPonto.Api.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartPonto.Api
 {
@@ -37,7 +39,9 @@ namespace SmartPonto.Api
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-
+            #region EFCoreConfig
+            services.AddDbContext<PontoDB>(opt => opt.UseSqlite("Data Source=PontoDB.db"));
+            #endregion
             #region Swagger Doc Configuration
             services.AddSwaggerGen((obj) =>
             {
@@ -109,7 +113,7 @@ namespace SmartPonto.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
