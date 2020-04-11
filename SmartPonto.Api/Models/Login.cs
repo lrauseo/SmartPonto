@@ -8,7 +8,6 @@ namespace SmartPonto.Api.Models
         public string TokenLogin { get; set; }
         public string NomeRedeSocial { get; set; }
         public bool IsLoginRedeSocial { get; set; }
-        public Usuario? Usuario { get; set; }
-        public Empresa? Empresa { get; set; }
+        public Usuario Usuario { get; set; }        
     }
 }

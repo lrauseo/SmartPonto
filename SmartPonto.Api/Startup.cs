@@ -18,6 +18,8 @@ using SmartPonto.Api.Models;
 using SmartPonto.Api.Models.TokenAuth;
 using SmartPonto.Api.Repository;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using SmartPonto.Api.AutoMapper;
 
 namespace SmartPonto.Api
 {
@@ -35,12 +37,13 @@ namespace SmartPonto.Api
         {
             services.AddCors();
             services.AddControllers();
+            services.AddAutoMapper(typeof(ProfileConfiguration));
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             #region EFCoreConfig
-            services.AddDbContext<PontoDB>(opt => opt.UseSqlite("Data Source=PontoDB.db"));
+            services.AddDbContext<PontoDB>(opt => opt.UseSqlite("Data Source=PontoDB.db"));    
             #endregion
             #region Swagger Doc Configuration
             services.AddSwaggerGen((obj) =>
@@ -101,13 +104,14 @@ namespace SmartPonto.Api
 
             #region Injecao de depenedencia
             services.AddScoped<ITokenAuthentication, TokenAuthentication>();
-
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPontoRepository,PontoRepository>();
             #endregion
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PontoDB db)
         {
             if (env.IsDevelopment())
             {
@@ -132,7 +136,8 @@ namespace SmartPonto.Api
                 .AllowAnyHeader());
 
             app.UseAuthorization();
-
+            db.Database.Migrate();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

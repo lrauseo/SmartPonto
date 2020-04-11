@@ -9,7 +9,6 @@ namespace SmartPonto.Api.Models
         public string Fantasia { get; set; }
         public int Cpnj { get; set; }    
         public bool Inativo { get; set; }
-        public ICollection<Usuario> Funcionarios { get; set; }
-        public Login LoginAdm { get; set; }
+        public IList<Usuario> Funcionarios { get; set; }          
     }
 }

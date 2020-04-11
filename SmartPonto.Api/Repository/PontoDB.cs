@@ -1,5 +1,7 @@
+using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
 using SmartPonto.Api.Models;
+using SmartPonto.Api.Repository.Mapping;
 
 namespace SmartPonto.Api.Repository
 {
@@ -12,6 +14,12 @@ namespace SmartPonto.Api.Repository
         public DbSet<Registro> Registros { get; set; }
         public PontoDB(DbContextOptions<PontoDB> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Ignore<Configuracao>();
+            modelBuilder.ApplyConfiguration(new UsuarioMap());
+            modelBuilder.ApplyConfiguration(new LoginMap());                          
         }
     }
 }
